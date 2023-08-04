@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Exception;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -46,26 +48,46 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'username' => [
+                'required',
+                'string',
+                'max:15',
+                'regex:/^[A-Za-z0-9]+$/',
+                'unique:users',
+            ],
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
+            'role' => 'nullable',
+        ], [
+            'username.regex' => 'The username must only contain letters and numbers.',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            if ($request->username !== strip_tags($request->username)) {
+                return $this->sendError('Bad Request', 'Invalid Input.', Response::HTTP_BAD_REQUEST);
+            }
 
-        $token = Auth::login($user);
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User created successfully',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
-        ]);
+            $user = User::create([
+                'name' => $request->name,
+                'username' => strtolower($request->username),
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => $request->role,
+            ]);
+
+            $token = Auth::login($user);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User created successfully',
+                'user' => $user,
+                'authorisation' => [
+                    'token' => $token,
+                    'type' => 'bearer',
+                ]
+            ]);
+        } catch (Exception $e) {
+            return $this->sendError('Internal Server Error', $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function logout()
@@ -87,5 +109,14 @@ class AuthController extends Controller
                 'type' => 'bearer',
             ]
         ]);
+    }
+
+    protected function sendError($message, $data = [], $status = Response::HTTP_BAD_REQUEST)
+    {
+        return response()->json([
+            'status' => 'error',
+            'message' => $message,
+            'data' => $data,
+        ], $status);
     }
 }

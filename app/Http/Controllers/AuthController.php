@@ -47,7 +47,12 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:250',
+                'regex:/^[A-Za-z0-9]+$/',
+            ],
             'username' => [
                 'required',
                 'string',
@@ -64,6 +69,10 @@ class AuthController extends Controller
 
         try {
             if ($request->username !== strip_tags($request->username)) {
+                return $this->sendError('Bad Request', 'Invalid Input.', Response::HTTP_BAD_REQUEST);
+            }
+
+            if ($request->name !== strip_tags($request->name)) {
                 return $this->sendError('Bad Request', 'Invalid Input.', Response::HTTP_BAD_REQUEST);
             }
 

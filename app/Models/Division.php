@@ -16,4 +16,9 @@ class Division extends Model
     {
         return $this->hasMany(Career::class, 'divisionID');
     }
+
+    public function application()
+    {
+        return $this->hasMany(Application::class, 'divisionID');
+    }
 }

@@ -6,19 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Department extends Model
+class Application extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
 
-    public function careers()
+    public function division()
     {
-        return $this->hasMany(Career::class, 'departmentID');
+        return $this->belongsTo(Division::class, 'divisionID', 'id');
     }
 
-    public function application()
+    public function department()
     {
-        return $this->hasMany(Application::class, 'departmentID');
+        return $this->belongsTo(Department::class, 'departmentID', 'id');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -42,3 +43,5 @@ Route::post('/positions/{id}', [PositionController::class, 'update']);
 
 Route::resource('/careers', CareerController::class);
 Route::post('/careers/{id}', [CareerController::class, 'update']);
+
+Route::resource('/applications', ApplicationController::class);

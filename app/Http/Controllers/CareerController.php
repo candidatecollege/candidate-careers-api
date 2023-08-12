@@ -35,7 +35,7 @@ class CareerController extends Controller
     public function store(CareerRequest $request)
     {
         $request->validate([
-            'name' => 'required|regex:/^[A-Za-z0-9]+$/',
+            'name' => 'required|regex:/^[A-Za-z0-9.,]+$/',
         ]);
 
         try {

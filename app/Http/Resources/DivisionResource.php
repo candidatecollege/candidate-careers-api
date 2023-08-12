@@ -16,7 +16,7 @@ class DivisionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'division name' => $this->name
+            'division_name' => $this->name
         ];
     }
 }

@@ -1,8 +1,13 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CareerController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\PositionController;
 use App\Http\Controllers\TodoController;
 
 /*
@@ -26,3 +31,17 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
 });
+
+Route::resource('/divisions', DivisionController::class);
+Route::post('/divisions/{id}', [DivisionController::class, 'update']);
+
+Route::resource('/departments', DepartmentController::class);
+Route::post('/departments/{id}', [DepartmentController::class, 'update']);
+
+Route::resource('/positions', PositionController::class);
+Route::post('/positions/{id}', [PositionController::class, 'update']);
+
+Route::resource('/careers', CareerController::class);
+Route::post('/careers/{id}', [CareerController::class, 'update']);
+
+Route::resource('/applications', ApplicationController::class);

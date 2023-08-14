@@ -65,7 +65,9 @@ class AuthController extends Controller
             'role' => 'nullable',
         ], [
             'username.regex' => 'The username must only contain letters and numbers.',
+            'name.regex' => 'The name must only contain letters and numbers.',
         ]);
+
 
         try {
             if ($request->username !== strip_tags($request->username)) {
